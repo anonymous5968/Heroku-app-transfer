@@ -1,4 +1,3 @@
-
 import os
 import subprocess
 import requests
@@ -57,3 +56,24 @@ def transfer_app(app_name, source_key, target_key):
     push_code(temp_name, app_name, source_key, target_key)
     set_config_vars(target_key, app_name, config_vars)
     return {"app": app_name, "status": "success"}
+
+# --- New functions for real-time data and deletion ---
+
+def get_app_status(api_key, app_name):
+    headers = HEADERS.copy()
+    headers["Authorization"] = f"Bearer {api_key}"
+    try:
+        response = requests.get(f"{HEROKU_API}/apps/{app_name}", headers=headers)
+        response.raise_for_status()
+        return {"app": app_name, "status": "running"}
+    except requests.exceptions.HTTPError:
+        return {"app": app_name, "status": "not running"}
+
+def delete_app(api_key, app_name):
+    headers = HEADERS.copy()
+    headers["Authorization"] = f"Bearer {api_key}"
+    response = requests.delete(f"{HEROKU_API}/apps/{app_name}", headers=headers)
+    if response.status_code == 202:
+        return {"app": app_name, "status": "deleted"}
+    else:
+        return {"app": app_name, "status": "failed", "error": response.text}
