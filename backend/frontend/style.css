@@ -1,114 +1,135 @@
-/* General body styling */
+/* Reset some default styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #121212;
-    color: #ffffff;
-    display: flex;
-    justify-content: center; /* center horizontally */
-    align-items: center; /* center vertically */
-    min-height: 100vh;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #1e1e2f; /* dark, modern background */
+  color: #fff;
 }
 
-/* Main container */
 .container {
-    width: 90%;
-    max-width: 600px;
-    text-align: center; /* center text inside container */
+  width: 95%;
+  max-width: 500px;
+  background: #2b2b3f;
+  padding: 30px 25px;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  text-align: center;
 }
 
-/* Card styling */
-.card {
-    background: #1e1e1e;
-    padding: 20px;
-    margin: 15px 0;
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-}
-
-/* Headings */
 h1 {
-    font-size: 2rem;
-    margin-bottom: 20px;
-    color: #00ff00;
+  margin-bottom: 25px;
+  font-size: 1.8em;
+  color: #00ffcc;
 }
 
-h2 {
-    font-size: 1.3rem;
-    margin-bottom: 15px;
+.input-group {
+  margin-bottom: 15px;
+  text-align: left;
 }
 
-/* Inputs */
-input[type="text"] {
-    width: 80%;
-    padding: 10px;
-    margin: 8px 0;
-    border-radius: 6px;
-    border: none;
-    outline: none;
+.input-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: #00ffcc;
 }
 
-/* Buttons */
-button {
-    padding: 10px 20px;
-    margin-top: 10px;
-    border: none;
-    border-radius: 6px;
-    background: #00ff00;
-    color: #000;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
+.input-group input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  font-size: 1em;
 }
 
-button:hover {
-    background: #00cc00;
+.input-group input::placeholder {
+  color: #999;
 }
 
-/* Apps & Status lists */
-.app-list {
-    list-style: none;
-    padding: 0;
+.button-group {
+  margin: 20px 0;
+  display: flex;
+  justify-content: space-between;
 }
 
-.app-list li {
-    margin: 10px 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.button-group button {
+  flex: 1;
+  margin: 0 5px;
+  padding: 10px;
+  background: #00ffcc;
+  color: #1e1e2f;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
 }
 
-/* Loader */
-.loader {
-    border: 3px solid #f3f3f3;
-    border-top: 3px solid #00ff00;
-    border-radius: 50%;
-    width: 14px;
-    height: 14px;
-    margin-left: 8px;
-    animation: spin 1s linear infinite;
+.button-group button:hover {
+  background: #00d6a0;
 }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+.apps-section {
+  text-align: left;
+  margin-top: 20px;
 }
 
-/* Status badges */
-.success {
-    color: #00ff00;
-    font-weight: bold;
+.apps-section h2 {
+  margin-bottom: 10px;
+  color: #00ffcc;
+  font-size: 1.2em;
 }
 
-.fail {
-    color: #ff4d4d;
-    font-weight: bold;
+#appsContainer {
+  list-style: none;
+  max-height: 150px;
+  overflow-y: auto;
+  padding-left: 5px;
 }
 
-/* Footer */
-footer {
-    margin-top: 20px;
-    font-size: 0.9rem;
-    color: #aaaaaa;
+#appsContainer li {
+  padding: 5px 0;
+}
+
+#appsContainer input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+.status-section {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.status-section .success {
+  color: #00ff99;
+  margin-bottom: 5px;
+}
+
+.status-section .fail {
+  color: #ff4d4d;
+  margin-bottom: 5px;
+}
+
+/* Scrollbar styling */
+#appsContainer::-webkit-scrollbar {
+  width: 6px;
+}
+
+#appsContainer::-webkit-scrollbar-thumb {
+  background-color: #00ffcc;
+  border-radius: 3px;
+}
+
+#appsContainer::-webkit-scrollbar-track {
+  background: #1e1e2f;
     }
