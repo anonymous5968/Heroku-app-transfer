@@ -1,108 +1,103 @@
-/* Global */
-body {
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: #fff;
-    margin: 0;
-    padding: 0;
+// Elements
+const sourceInput = document.getElementById("sourceKey");
+const targetInput = document.getElementById("targetKey");
+const fetchBtn = document.getElementById("fetchApps");
+const appsContainer = document.getElementById("appsContainer");
+const transferBtn = document.getElementById("transferApps");
+const statusContainer = document.getElementById("statusContainer");
+
+// Store fetched apps
+let fetchedApps = [];
+
+// Fetch apps from source account
+fetchBtn.addEventListener("click", async () => {
+    const sourceKey = sourceInput.value.trim();
+    if (!sourceKey) {
+        alert("Please enter the source API key");
+        return;
+    }
+
+    appsContainer.innerHTML = "Loading apps...";
+    statusContainer.innerHTML = "";
+
+    try {
+        const response = await fetch("/apps", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ source_api_key: sourceKey })
+        });
+        const data = await response.json();
+
+        if (data.error) {
+            appsContainer.innerHTML = `<span class="fail">${data.error}</span>`;
+            return;
+        }
+
+        fetchedApps = data;
+        renderApps(fetchedApps);
+
+    } catch (error) {
+        appsContainer.innerHTML = `<span class="fail">Error: ${error.message}</span>`;
+    }
+});
+
+// Render list of apps with checkboxes
+function renderApps(apps) {
+    if (!apps.length) {
+        appsContainer.innerHTML = "No apps found.";
+        return;
+    }
+
+    appsContainer.innerHTML = apps.map(app => `
+        <li>
+            <label>
+                <input type="checkbox" value="${app}"> ${app}
+            </label>
+        </li>
+    `).join("");
 }
 
-/* Container */
-.container {
-    max-width: 500px;
-    margin: 2rem auto;
-    padding: 1rem;
-}
+// Transfer selected apps
+transferBtn.addEventListener("click", async () => {
+    const sourceKey = sourceInput.value.trim();
+    const targetKey = targetInput.value.trim();
+    const selectedApps = Array.from(appsContainer.querySelectorAll("input[type=checkbox]:checked"))
+        .map(cb => cb.value);
 
-/* Cards */
-.card {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-    backdrop-filter: blur(8px);
-}
+    if (!sourceKey || !targetKey) {
+        alert("Please enter both API keys");
+        return;
+    }
+    if (!selectedApps.length) {
+        alert("Select at least one app to transfer");
+        return;
+    }
 
-/* Headings */
-h1, h2 {
-    text-align: center;
-    margin-bottom: 0.5rem;
-}
+    statusContainer.innerHTML = "Transferring apps...";
+    
+    try {
+        const response = await fetch("/transfer", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                source_api_key: sourceKey,
+                target_api_key: targetKey,
+                apps: selectedApps
+            })
+        });
+        const results = await response.json();
 
-/* Inputs */
-input {
-    width: 100%;
-    padding: 0.6rem;
-    border-radius: 8px;
-    border: none;
-    margin-bottom: 0.5rem;
-    font-size: 1rem;
-}
+        renderTransferResults(results);
 
-/* Buttons */
-button {
-    width: 100%;
-    padding: 0.7rem;
-    border: none;
-    border-radius: 8px;
-    background: #ff6a00;
-    color: #fff;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
+    } catch (error) {
+        statusContainer.innerHTML = `<span class="fail">Transfer failed: ${error.message}</span>`;
+    }
+});
 
-button:hover {
-    background: #ff8c42;
-}
-
-/* Lists */
-.app-list {
-    list-style: none;
-    padding: 0;
-}
-
-.app-list li {
-    padding: 0.5rem;
-    border-radius: 5px;
-    margin-bottom: 0.3rem;
-    background: rgba(255, 255, 255, 0.05);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.app-list li.success {
-    background: rgba(0, 255, 0, 0.2);
-    color: #00ff00;
-}
-
-.app-list li.fail {
-    background: rgba(255, 0, 0, 0.2);
-    color: #ff4d4d;
-}
-
-/* Loader */
-.loader {
-    border: 4px solid rgba(255,255,255,0.2);
-    border-top: 4px solid #fff;
-    border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    animation: spin 1s linear infinite;
-    margin-left: 10px;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg);}
-    100% { transform: rotate(360deg);}
-}
-
-/* Footer */
-footer {
-    text-align: center;
-    margin-top: 1rem;
-    font-size: 0.8rem;
-    opacity: 0.7;
+// Render transfer results
+function renderTransferResults(results) {
+    statusContainer.innerHTML = results.map(res => {
+        const statusClass = res.status === "success" ? "success" : "fail";
+        return `<div class="${statusClass}">${res.app}: ${res.status}${res.error ? " - " + res.error : ""}</div>`;
+    }).join("");
 }
