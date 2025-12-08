@@ -1,91 +1,114 @@
-
+/* General body styling */
 body {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
-    background-color: #0d1117;
-    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #121212;
+    color: #ffffff;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: center; /* center horizontally */
+    align-items: center; /* center vertically */
     min-height: 100vh;
 }
 
+/* Main container */
 .container {
     width: 90%;
-    max-width: 500px;
-    background: #161b22;
+    max-width: 600px;
+    text-align: center; /* center text inside container */
+}
+
+/* Card styling */
+.card {
+    background: #1e1e1e;
     padding: 20px;
+    margin: 15px 0;
     border-radius: 12px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.4);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
 }
 
+/* Headings */
 h1 {
-    text-align: center;
-    color: #58a6ff;
+    font-size: 2rem;
     margin-bottom: 20px;
+    color: #00ff00;
 }
 
-label {
-    display: block;
-    margin: 10px 0 5px;
-    font-weight: bold;
-}
-
-input {
-    width: 100%;
-    padding: 10px;
-    border-radius: 6px;
-    border: none;
-    outline: none;
-    background: #21262d;
-    color: white;
+h2 {
+    font-size: 1.3rem;
     margin-bottom: 15px;
 }
 
+/* Inputs */
+input[type="text"] {
+    width: 80%;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+}
+
+/* Buttons */
 button {
-    width: 100%;
-    padding: 12px;
-    background: #238636;
+    padding: 10px 20px;
+    margin-top: 10px;
     border: none;
     border-radius: 6px;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-    margin-top: 10px;
+    background: #00ff00;
+    color: #000;
     font-weight: bold;
-    transition: 0.2s;
+    cursor: pointer;
+    transition: 0.3s;
 }
 
 button:hover {
-    background: #2ea043;
+    background: #00cc00;
 }
 
-#error {
-    color: #ff6b6b;
-    margin-top: 10px;
-    text-align: center;
-    display: none;
+/* Apps & Status lists */
+.app-list {
+    list-style: none;
+    padding: 0;
 }
 
-#apps-list {
-    margin-top: 15px;
-    background: #21262d;
-    padding: 10px;
-    border-radius: 6px;
-    max-height: 200px;
-    overflow-y: auto;
-}
-
-.app-item {
-    margin: 5px 0;
-    padding: 8px;
-    background: #30363d;
-    border-radius: 5px;
+.app-list li {
+    margin: 10px 0;
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 
-.app-item input {
-    margin-right: 10px;
-  }
+/* Loader */
+.loader {
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #00ff00;
+    border-radius: 50%;
+    width: 14px;
+    height: 14px;
+    margin-left: 8px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Status badges */
+.success {
+    color: #00ff00;
+    font-weight: bold;
+}
+
+.fail {
+    color: #ff4d4d;
+    font-weight: bold;
+}
+
+/* Footer */
+footer {
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: #aaaaaa;
+    }
