@@ -1,23 +1,117 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Heroku App Transfer</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h2>Heroku App Transfer Tool</h2>
-    <input type="text" id="sourceKey" placeholder="Source API Key"><br>
-    <input type="text" id="targetKey" placeholder="Target API Key"><br>
-    <button onclick="fetchApps()">Fetch Apps</button>
+    <div class="container">
+        <h1>Heroku App Transfer</h1>
 
-    <h3>Select Apps:</h3>
-    <div id="appsList"></div>
+        <!-- API Keys Card -->
+        <div class="card">
+            <h2>API Keys</h2>
+            <input type="text" id="sourceKey" placeholder="Source API Key">
+            <input type="text" id="targetKey" placeholder="Target API Key">
+            <button onclick="listApps()">List Apps</button>
+        </div>
 
-    <button onclick="transferApps()">Transfer Selected Apps</button>
+        <!-- Apps List Card -->
+        <div class="card">
+            <h2>Apps</h2>
+            <ul class="app-list" id="appsList"></ul>
+            <button id="transferBtn" onclick="transferSelected()" style="display:none;">Transfer Selected Apps</button>
+        </div>
 
-    <h3>Logs:</h3>
-    <pre id="logs"></pre>
+        <!-- Status List Card -->
+        <div class="card">
+            <h2>Status</h2>
+            <ul class="app-list" id="statusList"></ul>
+        </div>
+    </div>
 
-    <script src="script.js"></script>
+    <footer>
+        &copy; 2025 Heroku App Transfer
+    </footer>
+
+    <script>
+        let appsData = [];
+
+        async function listApps() {
+            const sourceKey = document.getElementById("sourceKey").value;
+            const res = await fetch("/apps", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ source_api_key: sourceKey })
+            });
+
+            const apps = await res.json();
+            const appsList = document.getElementById("appsList");
+            appsList.innerHTML = "";
+            appsData = [];
+
+            if (apps.error) {
+                alert(apps.error);
+                return;
+            }
+
+            apps.forEach(appName => {
+                const li = document.createElement("li");
+                const checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.value = appName;
+                li.appendChild(checkbox);
+                li.appendChild(document.createTextNode(" " + appName));
+                appsList.appendChild(li);
+                appsData.push(appName);
+            });
+
+            document.getElementById("transferBtn").style.display = "block";
+        }
+
+        async function transferSelected() {
+            const selected = Array.from(document.querySelectorAll("#appsList input:checked"))
+                                  .map(cb => cb.value);
+
+            if (selected.length === 0) {
+                alert("Please select at least one app.");
+                return;
+            }
+
+            const sourceKey = document.getElementById("sourceKey").value;
+            const targetKey = document.getElementById("targetKey").value;
+            const statusList = document.getElementById("statusList");
+            statusList.innerHTML = "";
+
+            for (const appName of selected) {
+                const li = document.createElement("li");
+                li.textContent = `${appName}: Transferring `;
+                
+                const loader = document.createElement("span");
+                loader.className = "loader";
+                li.appendChild(loader);
+                statusList.appendChild(li);
+
+                try {
+                    const res = await fetch("/transfer", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            source_api_key: sourceKey,
+                            target_api_key: targetKey,
+                            apps: [appName]
+                        })
+                    });
+
+                    const result = await res.json();
+                    li.innerHTML = `${result[0].app}: <span class="${result[0].status === 'success' ? 'success' : 'fail'}">${result[0].status}</span>`;
+                } catch (err) {
+                    li.innerHTML = `${appName}: <span class="fail">failed</span>`;
+                }
+            }
+        }
+    </script>
 </body>
-</html>
+    </html>
