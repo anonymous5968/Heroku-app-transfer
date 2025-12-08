@@ -1,42 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Heroku App Transfer</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heroku App Transfer Dashboard</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Heroku App Transfer</h1>
+    <div class="container">
+        <h1>Heroku App Transfer</h1>
 
-    <div class="input-group">
-      <label for="sourceKey">Source API Key</label>
-      <input type="text" id="sourceKey" placeholder="Enter source API key">
+        <div class="api-inputs">
+            <input type="text" id="sourceKey" placeholder="Source API Key">
+            <input type="text" id="targetKey" placeholder="Target API Key">
+            <button id="fetchApps">Fetch Apps</button>
+        </div>
+
+        <!-- Summary Bar -->
+        <div id="summaryBar" class="summary-bar">
+            <div>Total Apps: <span id="totalApps">0</span></div>
+            <div>Running: <span id="runningApps">0</span></div>
+            <div>Stopped: <span id="stoppedApps">0</span></div>
+        </div>
+
+        <div id="appsContainer" class="apps-grid">
+            <!-- App cards will be inserted here -->
+        </div>
+
+        <div class="transfer-section">
+            <h2>Transfer Selected Apps</h2>
+            <button id="transferSelected">Transfer Selected Apps</button>
+            <button id="deleteSelected">Delete Selected Apps</button>
+        </div>
+
+        <div id="results"></div>
     </div>
 
-    <div class="input-group">
-      <label for="targetKey">Target API Key</label>
-      <input type="text" id="targetKey" placeholder="Enter target API key">
-    </div>
-
-    <div class="button-group">
-      <button id="fetchApps">Fetch Apps</button>
-      <button id="transferApps">Transfer Selected Apps</button>
-    </div>
-
-    <div class="apps-section">
-      <h2>Apps List</h2>
-      <ul id="appsContainer">
-        <!-- Apps will be dynamically listed here -->
-      </ul>
-    </div>
-
-    <div class="status-section" id="statusContainer">
-      <!-- Transfer status messages appear here -->
-    </div>
-  </div>
-
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
-</html>
+      </html>
